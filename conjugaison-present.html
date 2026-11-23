@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Présent — 法语直陈式现在时变位练习</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a2332;
+      --ink-soft: #3d4a5c;
+      --muted: #6b7789;
+      --paper: #f7f9fb;
+      --panel: #ffffff;
+      --line: #d5dde8;
+      --accent: #0d6e6e;
+      --accent-deep: #085555;
+      --accent-soft: #e6f3f3;
+      --warm: #c45c26;
+      --warm-soft: #fdf0e8;
+      --ok: #1f7a4d;
+      --ok-bg: #e8f6ee;
+      --bad: #b33a3a;
+      --bad-bg: #fceeee;
+      --shadow: 0 12px 40px rgba(26, 35, 50, 0.08);
+      --radius: 14px;
+      --font-display: "Instrument Serif", Georgia, serif;
+      --font-ui: "Sora", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-ui);
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #cfe8e6 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, #f3d9c8 0%, transparent 45%),
+        linear-gradient(180deg, #eef3f7 0%, var(--paper) 38%, #eaf0f4 100%);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .grain {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(920px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2.5rem 0 4rem;
+    }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 1.2rem 0 2.4rem;
+      animation: rise 0.7s ease both;
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-size: clamp(3.4rem, 10vw, 5.6rem);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.85rem;
+      color: var(--ink);
+    }
+
+    .brand em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-lead {
+      max-width: 28rem;
+      margin: 0 0 1.6rem;
+      color: var(--ink-soft);
+      font-size: 1.05rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: 600 0.95rem var(--font-ui);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .hero-cta:hover { background: var(--accent-deep); transform: translateY(-1px); }
+    .hero-cta:active { transform: translateY(0); }
+
+    .hero-meta {
+      margin-top: 0.9rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* —— Practice panel —— */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1.2rem, 3vw, 1.75rem);
+      animation: rise 0.7s ease 0.12s both;
+    }
+
+    .panel + .panel { margin-top: 1.1rem; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .chip {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      color: var(--ink-soft);
+      border-radius: 10px;
+      padding: 0.55rem 0.9rem;
+      font: 500 0.88rem var(--font-ui);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+
+    .chip[aria-pressed="true"] {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-deep);
+    }
+
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+      margin-bottom: 1.1rem;
+    }
+
+    @media (max-width: 560px) {
+      .modes { grid-template-columns: 1fr; }
+    }
+
+    .mode-btn {
+      text-align: left;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .mode-btn[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .mode-btn strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .mode-btn span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.25rem;
+      border-top: 1px solid var(--line);
+      margin-top: 0.25rem;
+      padding-top: 1rem;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+    }
+
+    .stats b { color: var(--ink); font-weight: 600; }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle input { accent-color: var(--accent); width: 1rem; height: 1rem; }
+
+    /* —— Quiz —— */
+    .quiz-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: baseline;
+      margin-bottom: 1.25rem;
+    }
+
+    .group-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-deep);
+      background: var(--accent-soft);
+      border-radius: 8px;
+      padding: 0.28rem 0.55rem;
+    }
+
+    .infinitive {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 2.75rem);
+      margin: 0;
+      line-height: 1;
+    }
+
+    .meaning {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .prompt {
+      margin: 0 0 1.1rem;
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+    }
+
+    .prompt .person {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .answer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: stretch;
+    }
+
+    .answer-input {
+      flex: 1 1 220px;
+      min-width: 0;
+      font: 500 1.15rem var(--font-ui);
+      padding: 0.85rem 1rem;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .answer-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(13, 110, 110, 0.15);
+    }
+
+    .answer-input.is-ok {
+      border-color: var(--ok);
+      background: var(--ok-bg);
+    }
+
+    .answer-input.is-bad {
+      border-color: var(--bad);
+      background: var(--bad-bg);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.15rem;
+      font: 600 0.92rem var(--font-ui);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, color 0.2s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-deep); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+    }
+    .btn-ghost:hover { background: var(--paper); }
+
+    .feedback {
+      min-height: 1.5rem;
+      margin: 0.85rem 0 0;
+      font-size: 0.95rem;
+    }
+
+    .feedback.ok { color: var(--ok); }
+    .feedback.bad { color: var(--bad); }
+    .feedback.partial { color: var(--warm); }
+    .feedback .correct {
+      font-weight: 600;
+      font-family: var(--font-ui);
+    }
+
+    /* —— Full table mode —— */
+    .paradigm {
+      display: grid;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: minmax(7.5rem, 9rem) 1fr;
+      gap: 0.55rem;
+      align-items: center;
+    }
+
+    @media (max-width: 480px) {
+      .row { grid-template-columns: 1fr; gap: 0.25rem; }
+    }
+
+    .row label {
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-top: 0.4rem;
+    }
+
+    /* —— Reference —— */
+    .ref-intro {
+      margin: 0 0 1rem;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+
+    details.verb {
+      border-top: 1px solid var(--line);
+      padding: 0.65rem 0;
+    }
+
+    details.verb:first-of-type { border-top: none; padding-top: 0; }
+
+    details.verb summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.75rem;
+      align-items: baseline;
+      font-weight: 600;
+    }
+
+    details.verb summary::-webkit-details-marker { display: none; }
+
+    details.verb summary::before {
+      content: "";
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 2px;
+      background: var(--accent);
+      transform: rotate(45deg);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    details.verb[open] summary::before { transform: rotate(135deg); }
+
+    .verb-zh {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .conj-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.35rem 1rem;
+      margin: 0.75rem 0 0.25rem;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 520px) {
+      .conj-grid { grid-template-columns: 1fr; }
+    }
+
+    .conj-grid span {
+      color: var(--muted);
+      display: inline-block;
+      min-width: 5.5rem;
+    }
+
+    .conj-grid strong { font-weight: 600; }
+
+    .footnote {
+      margin-top: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="hero">
+      <h1 class="brand">Présent<em>.</em></h1>
+      <p class="hero-lead">直陈式现在时变位练习：第一组、第二组，以及常见第三组不规则动词。</p>
+      <button type="button" class="hero-cta" id="startBtn">开始练习</button>
+      <p class="hero-meta">支持单空填空 / 完整六人称表 · 可容错重音</p>
+    </header>
+
+    <section class="panel" id="setup" aria-labelledby="setupTitle">
+      <h2 class="section-label" id="setupTitle">练习设置</h2>
+
+      <p class="section-label" style="margin-top:0.2rem">动词组别</p>
+      <div class="filters" role="group" aria-label="选择动词组">
+        <button type="button" class="chip" data-group="1" aria-pressed="true">第一组 (-er)</button>
+        <button type="button" class="chip" data-group="2" aria-pressed="true">第二组 (-ir)</button>
+        <button type="button" class="chip" data-group="3" aria-pressed="true">第三组（常见）</button>
+      </div>
+
+      <p class="section-label">练习方式</p>
+      <div class="modes" role="group" aria-label="练习方式">
+        <button type="button" class="mode-btn" data-mode="single" aria-pressed="true">
+          <strong>单空填空</strong>
+          <span>随机动词 + 一人称，输入正确变位</span>
+        </button>
+        <button type="button" class="mode-btn" data-mode="table" aria-pressed="false">
+          <strong>完整变位表</strong>
+          <span>一次填齐 je → ils/elles 六个形式</span>
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <div class="stats" aria-live="polite">
+          <span>得分 <b id="score">0</b></span>
+          <span>连续 <b id="streak">0</b></span>
+          <span>已练 <b id="done">0</b></span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="accentFlex" checked />
+          重音容错（é/è/ê ≈ e）
+        </label>
+      </div>
+    </section>
+
+    <section class="panel" id="practice" aria-labelledby="practiceTitle" hidden>
+      <h2 class="section-label" id="practiceTitle">当前题目</h2>
+      <div class="quiz-head">
+        <span class="group-tag" id="groupTag"></span>
+        <h3 class="infinitive" id="infinitive"></h3>
+        <span class="meaning" id="meaning"></span>
+      </div>
+
+      <div id="singleMode">
+        <p class="prompt"><span class="person" id="personLabel"></span> + <span id="verbHint"></span> →</p>
+        <div class="answer-row">
+          <input
+            class="answer-input"
+            id="answer"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            autocapitalize="off"
+            aria-label="输入变位形式"
+            placeholder="输入变位…"
+          />
+          <button type="button" class="btn btn-primary" id="checkBtn">核对</button>
+          <button type="button" class="btn btn-ghost" id="skipBtn">跳过</button>
+        </div>
+        <p class="feedback" id="feedback" aria-live="polite"></p>
+      </div>
+
+      <div id="tableMode" hidden>
+        <div class="paradigm" id="paradigm"></div>
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="checkTableBtn">核对全部</button>
+          <button type="button" class="btn btn-ghost" id="revealBtn">显示答案</button>
+          <button type="button" class="btn btn-ghost" id="nextTableBtn">下一题</button>
+        </div>
+        <p class="feedback" id="tableFeedback" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="panel" id="reference" aria-labelledby="refTitle">
+      <h2 class="section-label" id="refTitle">变位速查</h2>
+      <p class="ref-intro">点击动词展开直陈式现在时完整变位，练习卡壳时可以回来对照。</p>
+      <div id="refList"></div>
+    </section>
+
+    <p class="footnote">Présent · indicatif présent · 法语动词变位练习</p>
+  </div>
+
+  <script>
+    const PERSONS = [
+      { key: "je", label: "je" },
+      { key: "tu", label: "tu" },
+      { key: "il", label: "il / elle / on" },
+      { key: "nous", label: "nous" },
+      { key: "vous", label: "vous" },
+      { key: "ils", label: "ils / elles" },
+    ];
+
+    const GROUP_LABEL = {
+      1: "第一组 · -er",
+      2: "第二组 · -ir",
+      3: "第三组 · 不规则",
+    };
+
+    /** @type {{inf:string, zh:string, group:1|2|3, forms:Record<string,string>}[]} */
+    const VERBS = [
+      // —— 第一组 ——
+      { inf: "parler", zh: "说话", group: 1, forms: { je: "parle", tu: "parles", il: "parle", nous: "parlons", vous: "parlez", ils: "parlent" } },
+      { inf: "aimer", zh: "爱；喜欢", group: 1, forms: { je: "aime", tu: "aimes", il: "aime", nous: "aimons", vous: "aimez", ils: "aiment" } },
+      { inf: "habiter", zh: "居住", group: 1, forms: { je: "habite", tu: "habites", il: "habite", nous: "habitons", vous: "habitez", ils: "habitent" } },
+      { inf: "travailler", zh: "工作", group: 1, forms: { je: "travaille", tu: "travailles", il: "travaille", nous: "travaillons", vous: "travaillez", ils: "travaillent" } },
+      { inf: "écouter", zh: "听", group: 1, forms: { je: "écoute", tu: "écoutes", il: "écoute", nous: "écoutons", vous: "écoutez", ils: "écoutent" } },
+      { inf: "étudier", zh: "学习", group: 1, forms: { je: "étudie", tu: "étudies", il: "étudie", nous: "étudions", vous: "étudiez", ils: "étudient" } },
+      { inf: "regarder", zh: "看", group: 1, forms: { je: "regarde", tu: "regardes", il: "regarde", nous: "regardons", vous: "regardez", ils: "regardent" } },
+      { inf: "chercher", zh: "寻找", group: 1, forms: { je: "cherche", tu: "cherches", il: "cherche", nous: "cherchons", vous: "cherchez", ils: "cherchent" } },
+      { inf: "donner", zh: "给", group: 1, forms: { je: "donne", tu: "donnes", il: "donne", nous: "donnons", vous: "donnez", ils: "donnent" } },
+      { inf: "demander", zh: "询问；要求", group: 1, forms: { je: "demande", tu: "demandes", il: "demande", nous: "demandons", vous: "demandez", ils: "demandent" } },
+      { inf: "manger", zh: "吃", group: 1, forms: { je: "mange", tu: "manges", il: "mange", nous: "mangeons", vous: "mangez", ils: "mangent" } },
+      { inf: "commencer", zh: "开始", group: 1, forms: { je: "commence", tu: "commences", il: "commence", nous: "commençons", vous: "commencez", ils: "commencent" } },
+      { inf: "voyager", zh: "旅行", group: 1, forms: { je: "voyage", tu: "voyages", il: "voyage", nous: "voyageons", vous: "voyagez", ils: "voyagent" } },
+      { inf: "acheter", zh: "买", group: 1, forms: { je: "achète", tu: "achètes", il: "achète", nous: "achetons", vous: "achetez", ils: "achètent" } },
+      { inf: "préférer", zh: "更喜欢", group: 1, forms: { je: "préfère", tu: "préfères", il: "préfère", nous: "préférons", vous: "préférez", ils: "préfèrent" } },
+      { inf: "appeler", zh: "称呼；打电话", group: 1, forms: { je: "appelle", tu: "appelles", il: "appelle", nous: "appelons", vous: "appelez", ils: "appellent" } },
+
+      // —— 第二组 ——
+      { inf: "finir", zh: "完成；结束", group: 2, forms: { je: "finis", tu: "finis", il: "finit", nous: "finissons", vous: "finissez", ils: "finissent" } },
+      { inf: "choisir", zh: "选择", group: 2, forms: { je: "choisis", tu: "choisis", il: "choisit", nous: "choisissons", vous: "choisissez", ils: "choisissent" } },
+      { inf: "réussir", zh: "成功", group: 2, forms: { je: "réussis", tu: "réussis", il: "réussit", nous: "réussissons", vous: "réussissez", ils: "réussissent" } },
+      { inf: "grandir", zh: "长大；变大", group: 2, forms: { je: "grandis", tu: "grandis", il: "grandit", nous: "grandissons", vous: "grandissez", ils: "grandissent" } },
+      { inf: "réfléchir", zh: "思考；反射", group: 2, forms: { je: "réfléchis", tu: "réfléchis", il: "réfléchit", nous: "réfléchissons", vous: "réfléchissez", ils: "réfléchissent" } },
+      { inf: "obéir", zh: "服从", group: 2, forms: { je: "obéis", tu: "obéis", il: "obéit", nous: "obéissons", vous: "obéissez", ils: "obéissent" } },
+      { inf: "remplir", zh: "填满；填写", group: 2, forms: { je: "remplis", tu: "remplis", il: "remplit", nous: "remplissons", vous: "remplissez", ils: "remplissent" } },
+      { inf: "punir", zh: "惩罚", group: 2, forms: { je: "punis", tu: "punis", il: "punit", nous: "punissons", vous: "punissez", ils: "punissent" } },
+      { inf: "rougir", zh: "脸红", group: 2, forms: { je: "rougis", tu: "rougis", il: "rougit", nous: "rougissons", vous: "rougissez", ils: "rougissent" } },
+      { inf: "établir", zh: "建立", group: 2, forms: { je: "établis", tu: "établis", il: "établit", nous: "établissons", vous: "établissez", ils: "établissent" } },
+
+      // —— 第三组（常见）——
+      { inf: "être", zh: "是", group: 3, forms: { je: "suis", tu: "es", il: "est", nous: "sommes", vous: "êtes", ils: "sont" } },
+      { inf: "avoir", zh: "有", group: 3, forms: { je: "ai", tu: "as", il: "a", nous: "avons", vous: "avez", ils: "ont" } },
+      { inf: "aller", zh: "去", group: 3, forms: { je: "vais", tu: "vas", il: "va", nous: "allons", vous: "allez", ils: "vont" } },
+      { inf: "faire", zh: "做；进行", group: 3, forms: { je: "fais", tu: "fais", il: "fait", nous: "faisons", vous: "faites", ils: "font" } },
+      { inf: "dire", zh: "说", group: 3, forms: { je: "dis", tu: "dis", il: "dit", nous: "disons", vous: "dites", ils: "disent" } },
+      { inf: "pouvoir", zh: "能够", group: 3, forms: { je: "peux", tu: "peux", il: "peut", nous: "pouvons", vous: "pouvez", ils: "peuvent" } },
+      { inf: "vouloir", zh: "想要", group: 3, forms: { je: "veux", tu: "veux", il: "veut", nous: "voulons", vous: "voulez", ils: "veulent" } },
+      { inf: "devoir", zh: "必须；应当", group: 3, forms: { je: "dois", tu: "dois", il: "doit", nous: "devons", vous: "devez", ils: "doivent" } },
+      { inf: "savoir", zh: "知道；会", group: 3, forms: { je: "sais", tu: "sais", il: "sait", nous: "savons", vous: "savez", ils: "savent" } },
+      { inf: "voir", zh: "看见", group: 3, forms: { je: "vois", tu: "vois", il: "voit", nous: "voyons", vous: "voyez", ils: "voient" } },
+      { inf: "venir", zh: "来", group: 3, forms: { je: "viens", tu: "viens", il: "vient", nous: "venons", vous: "venez", ils: "viennent" } },
+      { inf: "prendre", zh: "拿；乘坐", group: 3, forms: { je: "prends", tu: "prends", il: "prend", nous: "prenons", vous: "prenez", ils: "prennent" } },
+      { inf: "comprendre", zh: "理解", group: 3, forms: { je: "comprends", tu: "comprends", il: "comprend", nous: "comprenons", vous: "comprenez", ils: "comprennent" } },
+      { inf: "apprendre", zh: "学习", group: 3, forms: { je: "apprends", tu: "apprends", il: "apprend", nous: "apprenons", vous: "apprenez", ils: "apprennent" } },
+      { inf: "mettre", zh: "放；穿", group: 3, forms: { je: "mets", tu: "mets", il: "met", nous: "mettons", vous: "mettez", ils: "mettent" } },
+      { inf: "boire", zh: "喝", group: 3, forms: { je: "bois", tu: "bois", il: "boit", nous: "buvons", vous: "buvez", ils: "boivent" } },
+      { inf: "écrire", zh: "写", group: 3, forms: { je: "écris", tu: "écris", il: "écrit", nous: "écrivons", vous: "écrivez", ils: "écrivent" } },
+      { inf: "lire", zh: "读", group: 3, forms: { je: "lis", tu: "lis", il: "lit", nous: "lisons", vous: "lisez", ils: "lisent" } },
+      { inf: "partir", zh: "离开", group: 3, forms: { je: "pars", tu: "pars", il: "part", nous: "partons", vous: "partez", ils: "partent" } },
+      { inf: "sortir", zh: "出去", group: 3, forms: { je: "sors", tu: "sors", il: "sort", nous: "sortons", vous: "sortez", ils: "sortent" } },
+      { inf: "dormir", zh: "睡觉", group: 3, forms: { je: "dors", tu: "dors", il: "dort", nous: "dormons", vous: "dormez", ils: "dorment" } },
+      { inf: "ouvrir", zh: "打开", group: 3, forms: { je: "ouvre", tu: "ouvres", il: "ouvre", nous: "ouvrons", vous: "ouvrez", ils: "ouvrent" } },
+      { inf: "offrir", zh: "提供；赠送", group: 3, forms: { je: "offre", tu: "offres", il: "offre", nous: "offrons", vous: "offrez", ils: "offrent" } },
+      { inf: "connaître", zh: "认识；熟悉", group: 3, forms: { je: "connais", tu: "connais", il: "connaît", nous: "connaissons", vous: "connaissez", ils: "connaissent" } },
+      { inf: "croire", zh: "相信", group: 3, forms: { je: "crois", tu: "crois", il: "croit", nous: "croyons", vous: "croyez", ils: "croient" } },
+      { inf: "recevoir", zh: "收到", group: 3, forms: { je: "reçois", tu: "reçois", il: "reçoit", nous: "recevons", vous: "recevez", ils: "reçoivent" } },
+    ];
+
+    const state = {
+      groups: new Set([1, 2, 3]),
+      mode: "single",
+      score: 0,
+      streak: 0,
+      done: 0,
+      current: null,
+      person: null,
+      answered: false,
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function normalize(str, flexAccent) {
+      let s = str.trim().toLowerCase().replace(/\s+/g, " ");
+      // drop pronoun if typed: "je parle" → "parle"
+      s = s.replace(/^(je|j'|tu|il|elle|on|nous|vous|ils|elles)\s+/i, "");
+      s = s.replace(/^j'/i, "");
+      if (flexAccent) {
+        s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        s = s.replace(/œ/g, "oe").replace(/æ/g, "ae").replace(/ç/g, "c");
+      }
+      return s;
+    }
+
+    function pool() {
+      return VERBS.filter((v) => state.groups.has(v.group));
+    }
+
+    function pick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function updateStats() {
+      $("score").textContent = String(state.score);
+      $("streak").textContent = String(state.streak);
+      $("done").textContent = String(state.done);
+    }
+
+    function showVerbMeta(verb) {
+      $("groupTag").textContent = GROUP_LABEL[verb.group];
+      $("infinitive").textContent = verb.inf;
+      $("meaning").textContent = verb.zh;
+    }
+
+    function nextSingle() {
+      const verbs = pool();
+      if (!verbs.length) {
+        $("practice").hidden = true;
+        alert("请至少选择一组动词。");
+        return;
+      }
+      state.current = pick(verbs);
+      state.person = pick(PERSONS);
+      state.answered = false;
+      showVerbMeta(state.current);
+      $("personLabel").textContent = state.person.label;
+      $("verbHint").textContent = state.current.inf;
+      const input = $("answer");
+      input.value = "";
+      input.classList.remove("is-ok", "is-bad");
+      input.disabled = false;
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      $("checkBtn").textContent = "核对";
+      input.focus();
+    }
+
+    function buildParadigm(verb) {
+      const root = $("paradigm");
+      root.innerHTML = "";
+      PERSONS.forEach((p) => {
+        const row = document.createElement("div");
+        row.className = "row";
+        const lab = document.createElement("label");
+        lab.htmlFor = `f-${p.key}`;
+        lab.textContent = p.label;
+        const input = document.createElement("input");
+        input.className = "answer-input";
+        input.id = `f-${p.key}`;
+        input.dataset.key = p.key;
+        input.type = "text";
+        input.autocomplete = "off";
+        input.spellcheck = false;
+        input.placeholder = "…";
+        row.append(lab, input);
+        root.appendChild(row);
+      });
+    }
+
+    function nextTable() {
+      const verbs = pool();
+      if (!verbs.length) {
+        $("practice").hidden = true;
+        alert("请至少选择一组动词。");
+        return;
+      }
+      state.current = pick(verbs);
+      state.answered = false;
+      showVerbMeta(state.current);
+      buildParadigm(state.current);
+      $("tableFeedback").textContent = "";
+      $("tableFeedback").className = "feedback";
+      $("paradigm").querySelector("input")?.focus();
+    }
+
+    function startPractice() {
+      const verbs = pool();
+      if (!verbs.length) {
+        alert("请至少选择一组动词。");
+        return;
+      }
+      $("practice").hidden = false;
+      if (state.mode === "single") {
+        $("singleMode").hidden = false;
+        $("tableMode").hidden = true;
+        nextSingle();
+      } else {
+        $("singleMode").hidden = true;
+        $("tableMode").hidden = false;
+        nextTable();
+      }
+      $("practice").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function checkSingle() {
+      if (!state.current || !state.person) return;
+      const input = $("answer");
+      const flex = $("accentFlex").checked;
+      const expected = state.current.forms[state.person.key];
+      const got = input.value;
+
+      if (!got.trim()) {
+        input.focus();
+        return;
+      }
+
+      if (state.answered) {
+        nextSingle();
+        return;
+      }
+
+      const ok = normalize(got, flex) === normalize(expected, flex);
+      state.answered = true;
+      state.done += 1;
+
+      if (ok) {
+        state.score += 1;
+        state.streak += 1;
+        input.classList.add("is-ok");
+        $("feedback").className = "feedback ok";
+        $("feedback").textContent = flex && got.trim().toLowerCase() !== expected
+          ? `正确！标准写法：${expected}`
+          : "正确！";
+      } else {
+        state.streak = 0;
+        input.classList.add("is-bad");
+        $("feedback").className = "feedback bad";
+        $("feedback").innerHTML = `不对。正确答案是 <span class="correct">${expected}</span>`;
+      }
+      updateStats();
+      $("checkBtn").textContent = "下一题";
+    }
+
+    function checkTable() {
+      if (!state.current) return;
+      const flex = $("accentFlex").checked;
+      const inputs = [...$("paradigm").querySelectorAll("input")];
+      let correct = 0;
+      let empty = 0;
+
+      inputs.forEach((input) => {
+        const key = input.dataset.key;
+        const expected = state.current.forms[key];
+        const got = input.value;
+        input.classList.remove("is-ok", "is-bad");
+        if (!got.trim()) {
+          empty += 1;
+          return;
+        }
+        if (normalize(got, flex) === normalize(expected, flex)) {
+          input.classList.add("is-ok");
+          correct += 1;
+        } else {
+          input.classList.add("is-bad");
+        }
+      });
+
+      if (empty === inputs.length) {
+        $("tableFeedback").className = "feedback";
+        $("tableFeedback").textContent = "请先填写至少一个空。";
+        return;
+      }
+
+      const allFilled = empty === 0;
+      const allOk = correct === inputs.length;
+      state.done += 1;
+
+      if (allOk) {
+        state.score += 1;
+        state.streak += 1;
+        $("tableFeedback").className = "feedback ok";
+        $("tableFeedback").textContent = "全部正确！";
+      } else {
+        state.streak = 0;
+        $("tableFeedback").className = correct > 0 ? "feedback partial" : "feedback bad";
+        $("tableFeedback").textContent = allFilled
+          ? `对了 ${correct} / 6。点「显示答案」可对照，或改完再核。`
+          : `已填对 ${correct} 个，还有 ${empty} 个空未填。`;
+      }
+      updateStats();
+      state.answered = true;
+    }
+
+    function revealTable() {
+      if (!state.current) return;
+      [...$("paradigm").querySelectorAll("input")].forEach((input) => {
+        const expected = state.current.forms[input.dataset.key];
+        input.value = expected;
+        input.classList.remove("is-bad");
+        input.classList.add("is-ok");
+      });
+      $("tableFeedback").className = "feedback";
+      $("tableFeedback").textContent = "已填入标准变位。";
+    }
+
+    function renderReference() {
+      const root = $("refList");
+      root.innerHTML = "";
+      [1, 2, 3].forEach((g) => {
+        const heading = document.createElement("p");
+        heading.className = "section-label";
+        heading.style.marginTop = g === 1 ? "0.2rem" : "1.1rem";
+        heading.textContent = GROUP_LABEL[g];
+        root.appendChild(heading);
+
+        VERBS.filter((v) => v.group === g).forEach((v) => {
+          const det = document.createElement("details");
+          det.className = "verb";
+          const sum = document.createElement("summary");
+          sum.innerHTML = `${v.inf} <span class="verb-zh">${v.zh}</span>`;
+          const grid = document.createElement("div");
+          grid.className = "conj-grid";
+          PERSONS.forEach((p) => {
+            const cell = document.createElement("div");
+            cell.innerHTML = `<span>${p.label}</span><strong>${v.forms[p.key]}</strong>`;
+            grid.appendChild(cell);
+          });
+          det.append(sum, grid);
+          root.appendChild(det);
+        });
+      });
+    }
+
+    // —— Events ——
+    document.querySelectorAll(".chip").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const g = Number(btn.dataset.group);
+        const on = btn.getAttribute("aria-pressed") !== "true";
+        btn.setAttribute("aria-pressed", String(on));
+        if (on) state.groups.add(g);
+        else state.groups.delete(g);
+      });
+    });
+
+    document.querySelectorAll(".mode-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mode-btn").forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+        state.mode = btn.dataset.mode;
+        if (!$("practice").hidden) startPractice();
+      });
+    });
+
+    $("startBtn").addEventListener("click", startPractice);
+    $("checkBtn").addEventListener("click", checkSingle);
+    $("skipBtn").addEventListener("click", () => {
+      state.streak = 0;
+      updateStats();
+      nextSingle();
+    });
+    $("answer").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkSingle();
+    });
+    $("checkTableBtn").addEventListener("click", checkTable);
+    $("revealBtn").addEventListener("click", revealTable);
+    $("nextTableBtn").addEventListener("click", nextTable);
+
+    $("paradigm").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && e.target.matches("input")) {
+        e.preventDefault();
+        checkTable();
+      }
+    });
+
+    renderReference();
+    updateStats();
+  </script>
+</body>
+</html>
